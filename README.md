@@ -8,4 +8,4 @@ Dashboards desenvolvidos com o objetivo de apresentar o conhecimento na ferramen
 
 - [Dashboard Comercial](https://app.powerbi.com/view?r=eyJrIjoiN2Q0MzdhNTAtNWMyYi00ZGVhLWE0ZGYtMTNiMmE0NmU1M2QyIiwidCI6ImI3NTM5MDg3LWY0ZDgtNDdiMy1iZmQ1LTA4MzA4MTJjYjZiMiJ9)
 
-![Image]([https://github.com/PedroTagliamento/portfolio-power-bi/issues/2#issue-3213778985](https://github.com/user-attachments/assets/7a40bc03-237e-4fb8-aa1c-3420266fd0fb))
+![Image](https://github.com/user-attachments/assets/7a40bc03-237e-4fb8-aa1c-3420266fd0fb)
