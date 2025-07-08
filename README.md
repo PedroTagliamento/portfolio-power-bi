@@ -5,3 +5,7 @@ Dashboards desenvolvidos com o objetivo de apresentar o conhecimento na ferramen
 - [Dashboard de Logística](https://app.powerbi.com/view?r=eyJrIjoiNzc1OTkzNDMtOTYxNS00NDY2LTllOWUtNTUzN2IwNGQzZGI0IiwidCI6ImI3NTM5MDg3LWY0ZDgtNDdiMy1iZmQ1LTA4MzA4MTJjYjZiMiJ9)
 
 ![Image](https://github.com/user-attachments/assets/34ea4860-975b-4873-b549-0862920dc216)
+
+- [Dashboard Comercial](https://app.powerbi.com/view?r=eyJrIjoiN2Q0MzdhNTAtNWMyYi00ZGVhLWE0ZGYtMTNiMmE0NmU1M2QyIiwidCI6ImI3NTM5MDg3LWY0ZDgtNDdiMy1iZmQ1LTA4MzA4MTJjYjZiMiJ9)
+
+![Image](https://github.com/user-attachments/assets/7a40bc03-237e-4fb8-aa1c-3420266fd0fb)
