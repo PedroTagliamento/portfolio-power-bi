@@ -1,0 +1,42 @@
+relationship 88411d9b-282b-4502-99f7-b93fa509c77e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dm_Clientes.'Data Cadastro'
+	toColumn: LocalDateTable_008a548a-77d3-416a-8a11-3cb77da20c8b.Date
+
+relationship AutoDetected_0bffd341-c4c5-47e8-9f67-e85756769596
+	fromColumn: ft_Vendas.Cliente
+	toColumn: dm_Clientes.Cliente
+
+relationship AutoDetected_dc17212d-607e-44ff-8691-78bada5ebcd6
+	fromColumn: ft_Metas.Vendedor
+	toColumn: dm_Equipes.Vendedor
+
+relationship AutoDetected_152e972d-cc5d-40c0-8764-3215f375f2f9
+	fromColumn: ft_Vendas.Vendedor
+	toColumn: dm_Equipes.Vendedor
+
+relationship AutoDetected_7497132a-b9a8-44db-9ae6-5ddf55a4c354
+	fromColumn: ft_Vendas.'Código Produto'
+	toColumn: dm_Produtos.'Código Produto'
+
+relationship 30e56abb-7161-480d-8316-786b84a4643c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dm_Calendario.Data
+	toColumn: LocalDateTable_39ecf4c5-f201-49f5-9a35-88755e7b629b.Date
+
+relationship 5b511be7-d8a0-087a-6a2e-223e365d22a0
+	fromColumn: ft_Vendas.Data
+	toColumn: dm_Calendario.Data
+
+relationship AutoDetected_8a050575-4a20-4fd7-87de-24befb6685a7
+	fromColumn: ft_Metas.Mês
+	toColumn: dm_Mes.Mês
+
+relationship AutoDetected_6b4ed1cb-91f6-4eb3-bb76-2696b17b5614
+	fromColumn: ft_Vendas.Mês
+	toColumn: dm_Mes.Mês
+
+relationship 1e7d631c-de92-4cad-dc46-4140067cb34e
+	fromColumn: ft_Metas.Data
+	toColumn: dm_Calendario.Data
+

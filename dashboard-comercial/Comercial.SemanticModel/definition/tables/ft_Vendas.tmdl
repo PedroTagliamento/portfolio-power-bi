@@ -1,0 +1,161 @@
+table ft_Vendas
+	lineageTag: 1d8fe647-006c-4fde-b109-68ac52b22f66
+
+	column 'Nota Fiscal'
+		dataType: int64
+		formatString: 0
+		lineageTag: 265b02e0-1ff5-491f-9d42-ae7c92abe74d
+		summarizeBy: sum
+		sourceColumn: Nota Fiscal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 336dbbda-8e64-4ce1-92d7-e013df5c3461
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Código Produto'
+		dataType: string
+		lineageTag: 69fb842f-74d5-405d-ad87-c0bfadb5d682
+		summarizeBy: none
+		sourceColumn: Código Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome Produto'
+		dataType: string
+		lineageTag: 621b8d62-c150-4af9-a9c1-d0a475327b2c
+		summarizeBy: none
+		sourceColumn: Nome Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: 1135ac2c-17ab-451c-ae2d-e85bf44992f6
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantidade
+		dataType: int64
+		formatString: 0
+		lineageTag: a634b587-98a8-4208-98aa-3111ee23852f
+		summarizeBy: sum
+		sourceColumn: Quantidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preço Unitário'
+		dataType: double
+		lineageTag: 3c304afa-df1b-4db1-8f58-270c4784eebd
+		summarizeBy: sum
+		sourceColumn: Preço Unitário
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Faturamento
+		dataType: double
+		lineageTag: 842dd1a4-a9fe-4ec1-9ba4-5af6802fea54
+		summarizeBy: sum
+		sourceColumn: Faturamento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Custo
+		dataType: double
+		lineageTag: 8a9902ec-faa2-4da4-b23d-f6bdfb137e98
+		summarizeBy: sum
+		sourceColumn: Custo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Margem
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2c273d80-d737-4ed0-9cb6-af0d79d5c315
+		summarizeBy: sum
+		sourceColumn: Margem
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vendedor
+		dataType: string
+		lineageTag: 449c3cbc-df12-4d83-9e1a-c5251601c626
+		summarizeBy: none
+		sourceColumn: Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Supervisor
+		dataType: string
+		lineageTag: dec36dce-524f-4319-8c0b-9610bcda22b4
+		summarizeBy: none
+		sourceColumn: Supervisor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gerente
+		dataType: string
+		lineageTag: 2f0c57a2-e070-492d-8183-0ff7424ed073
+		summarizeBy: none
+		sourceColumn: Gerente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cliente
+		dataType: string
+		lineageTag: 5d7400d4-d8b4-46f0-bd39-a473e0cb8b59
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Status Cliente'
+		dataType: string
+		lineageTag: 048257a7-965f-461c-bb8e-faf0bf3270e0
+		summarizeBy: none
+		sourceColumn: Status Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: 7183278c-e0d1-45b1-abb1-036cd7ecec9e
+		summarizeBy: none
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ft_Vendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Pedro\Documents\GitHub\portfolio-power-bi\dashboard-comercial\Bases_Projeto_Comercial_PowerBI.xlsx"), null, true),
+				    Vendas_Sheet = Fonte{[Item="Vendas",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Vendas_Sheet, [PromoteAllScalars=true]),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Cabeçalhos Promovidos",".",",",Replacer.ReplaceText,{"Margem"}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Valor Substituído",{{"Nota Fiscal", Int64.Type}, {"Data", type date}, {"Código Produto", type text}, {"Nome Produto", type text}, {"Categoria", type text}, {"Quantidade", Int64.Type}, {"Preço Unitário", type number}, {"Faturamento", type number}, {"Custo", type number}, {"Margem", Percentage.Type}, {"Vendedor", type text}, {"Supervisor", type text}, {"Gerente", type text}, {"Cliente", type text}, {"Status Cliente", type text}}),
+				    #"Mês Inserido" = Table.AddColumn(#"Tipo Alterado", "Mês", each Date.Month([Data]), Int64.Type)
+				in
+				    #"Mês Inserido"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,128 @@
+table dm_Calendario
+	lineageTag: 79f0166e-6b9b-4b60-830d-bbcf28a0ba8c
+
+	column Data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3ac27d56-2781-46da-ac4f-a3dcd04c15e3
+		summarizeBy: none
+		sourceColumn: Data
+
+		variation Variation
+			isDefault
+			relationship: 30e56abb-7161-480d-8316-786b84a4643c
+			defaultHierarchy: LocalDateTable_39ecf4c5-f201-49f5-9a35-88755e7b629b.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: f0465574-236f-451d-891f-d37a488a03ae
+		summarizeBy: sum
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e77797d-c3f5-427d-ae72-93c8c7458970
+		summarizeBy: sum
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome do Mês'
+		dataType: string
+		lineageTag: 021cec5a-5d2a-4f66-b1e1-58f296476e0a
+		summarizeBy: none
+		sourceColumn: Nome do Mês
+		sortByColumn: Mês
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trimestre
+		dataType: string
+		lineageTag: 5ae9af59-3b98-421f-bb0f-10236275746f
+		summarizeBy: none
+		sourceColumn: Trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dia
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d735daa-02b8-4d40-8957-92d6263f57ec
+		summarizeBy: sum
+		sourceColumn: Dia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dia da Semana'
+		dataType: int64
+		formatString: 0
+		lineageTag: 22b2c3a7-f2c0-4efb-9690-b4fda7ddf617
+		summarizeBy: sum
+		sourceColumn: Dia da Semana
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome do Dia da Semana'
+		dataType: string
+		lineageTag: 67538b02-b121-44fd-be42-52e4b607709d
+		summarizeBy: none
+		sourceColumn: Nome do Dia da Semana
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano-Mês
+		dataType: string
+		lineageTag: 8432c56f-e539-4621-a96e-7124ebd72385
+		summarizeBy: none
+		sourceColumn: Ano-Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Semana do Ano'
+		dataType: int64
+		formatString: 0
+		lineageTag: 29f79aa7-10d4-4820-9aa8-f9725af47b9c
+		summarizeBy: sum
+		sourceColumn: Semana do Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dm_Calendario = m
+		mode: import
+		source =
+				let
+				    DataInicio = #date(2025, 1, 1),
+				    DataFim = #date(2025, 12, 31),
+				    Dias = Duration.Days(DataFim - DataInicio) + 1,
+				    TabelaDatas = List.Dates(DataInicio, Dias, #duration(1,0,0,0)),
+				    DimCalendario = Table.FromList(TabelaDatas, Splitter.SplitByNothing(), {"Data"}),
+				
+				    // Colunas Derivadas
+				    TipoData = Table.TransformColumnTypes(DimCalendario, {{"Data", type date}}),
+				
+				    AdicionaAno = Table.AddColumn(TipoData, "Ano", each Date.Year([Data]), Int64.Type),
+				    AdicionaMes = Table.AddColumn(AdicionaAno, "Mês", each Date.Month([Data]), Int64.Type),
+				    NomeMes = Table.AddColumn(AdicionaMes, "Nome do Mês", each Date.ToText([Data], "MMMM"), type text),
+				    AdicionaTrimestre = Table.AddColumn(NomeMes, "Trimestre", each "Q" & Text.From(Date.QuarterOfYear([Data])), type text),
+				    AdicionaDia = Table.AddColumn(AdicionaTrimestre, "Dia", each Date.Day([Data]), Int64.Type),
+				    AdicionaDiaSemana = Table.AddColumn(AdicionaDia, "Dia da Semana", each Date.DayOfWeek([Data]), Int64.Type),
+				    NomeDiaSemana = Table.AddColumn(AdicionaDiaSemana, "Nome do Dia da Semana", each Date.ToText([Data], "dddd"), type text),
+				    AdicionaAnoMes = Table.AddColumn(NomeDiaSemana, "Ano-Mês", each Text.From(Date.Year([Data])) & "-" & Text.PadStart(Text.From(Date.Month([Data])),2,"0"), type text),
+				    SemanaAno = Table.AddColumn(AdicionaAnoMes, "Semana do Ano", each Date.WeekOfYear([Data]), Int64.Type)
+				in
+				    SemanaAno
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

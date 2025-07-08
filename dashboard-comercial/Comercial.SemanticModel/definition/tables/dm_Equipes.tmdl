@@ -1,0 +1,61 @@
+table dm_Equipes
+	lineageTag: 94a2b4ed-9369-4c55-85fd-7c846f9bd5bb
+
+	column Vendedor
+		dataType: string
+		lineageTag: c7a2bb26-e8ec-4dcf-af51-42787218cc2e
+		summarizeBy: none
+		sourceColumn: Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Equipe
+		dataType: string
+		lineageTag: 6bedfd12-3e8f-4571-ad2a-fa58b2520402
+		summarizeBy: none
+		sourceColumn: Equipe
+
+		annotation SummarizationSetBy = Automatic
+
+	column Supervisor
+		dataType: string
+		lineageTag: b90e7295-0901-4841-93ce-e1941029ef5b
+		summarizeBy: none
+		sourceColumn: Supervisor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gerente
+		dataType: string
+		lineageTag: d1c2b127-9adb-472d-9614-390333097f82
+		summarizeBy: none
+		sourceColumn: Gerente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Região
+		dataType: string
+		lineageTag: b577e6a7-8647-45fc-ac62-51ca92ae4e25
+		summarizeBy: none
+		sourceColumn: Região
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dm_Equipes = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Pedro\Documents\GitHub\portfolio-power-bi\dashboard-comercial\Bases_Projeto_Comercial_PowerBI.xlsx"), null, true),
+				    Equipes_Sheet = Fonte{[Item="Equipes",Kind="Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Equipes_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Tipo Alterado", [PromoteAllScalars=true]),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Vendedor", type text}, {"Equipe", type text}, {"Supervisor", type text}, {"Gerente", type text}, {"Região", type text}})
+				in
+				    #"Tipo Alterado1"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,99 @@
+table ft_Metas
+	lineageTag: cc83ecae-146a-4169-a1e2-51d8943c71e9
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 82c1ca98-6acb-4081-9b54-82b3b79f2037
+		summarizeBy: sum
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: b52fa9fd-7a4b-4e10-bd4f-3183a25ec41d
+		summarizeBy: none
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vendedor
+		dataType: string
+		lineageTag: 2d2dc591-4514-4cc9-ba28-14f1c48be667
+		summarizeBy: none
+		sourceColumn: Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Meta Faturamento'
+		dataType: int64
+		formatString: 0
+		lineageTag: ae3b2fcb-5402-4715-bc67-b080436e14ed
+		summarizeBy: sum
+		sourceColumn: Meta Faturamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Meta Margem'
+		dataType: double
+		lineageTag: 301e4463-7341-4ee9-b9d3-083f09ef0d77
+		summarizeBy: sum
+		sourceColumn: Meta Margem
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Meta Equipe'
+		dataType: string
+		lineageTag: 609fb05d-e1b0-471f-8555-53980c9ea7ac
+		summarizeBy: none
+		sourceColumn: Meta Equipe
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Meta Supervisor'
+		dataType: string
+		lineageTag: d1bf4c98-447f-4e90-9550-b14e756a2d85
+		summarizeBy: none
+		sourceColumn: Meta Supervisor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Meta Gerente'
+		dataType: string
+		lineageTag: 06628ac5-89bc-4171-8035-9011a5632412
+		summarizeBy: none
+		sourceColumn: Meta Gerente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: ef47d7c2-c4e7-4b00-bc9a-1d67a879dff9
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition ft_Metas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Pedro\Documents\GitHub\portfolio-power-bi\dashboard-comercial\Bases_Projeto_Comercial_PowerBI.xlsx"), null, true),
+				    Metas_Sheet = Fonte{[Item="Metas",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Metas_Sheet, [PromoteAllScalars=true]),
+				    #"Coluna Mesclada Inserida" = Table.AddColumn(#"Cabeçalhos Promovidos", "Data", each Text.Combine({"1/", Text.From([Mês], "pt-BR"), "/", Text.From([Ano], "pt-BR")}), type text),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Coluna Mesclada Inserida",{{"Ano", Int64.Type}, {"Mês", Int64.Type}, {"Vendedor", type text}, {"Meta Faturamento", Int64.Type}, {"Meta Margem", Percentage.Type}, {"Meta Equipe", type text}, {"Meta Supervisor", type text}, {"Meta Gerente", type text}, {"Data", type date}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

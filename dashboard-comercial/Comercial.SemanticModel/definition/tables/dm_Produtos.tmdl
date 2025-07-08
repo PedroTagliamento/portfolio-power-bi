@@ -1,0 +1,88 @@
+table dm_Produtos
+	lineageTag: a72dc1ce-551c-4b6e-a651-1231b81ab7cc
+
+	column 'Código Produto'
+		dataType: string
+		lineageTag: 28d3a102-0a76-4a79-a78a-7a42bb646336
+		summarizeBy: none
+		sourceColumn: Código Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome Produto'
+		dataType: string
+		lineageTag: c9a87c28-af82-4a44-834a-ee6b8526c1c3
+		summarizeBy: none
+		sourceColumn: Nome Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: eeff6f10-4e07-4af7-851a-f31018355261
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategoria
+		dataType: string
+		lineageTag: 9c60d2ea-9efb-48fe-b512-b88067eb1ce0
+		summarizeBy: none
+		sourceColumn: Subcategoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Linha Produto'
+		dataType: string
+		lineageTag: fd97c62b-e9bb-41b4-8ae4-7982ad684cb2
+		summarizeBy: none
+		sourceColumn: Linha Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo Produto'
+		dataType: string
+		lineageTag: a62453d8-28c3-43ed-82fa-cb746271f6fb
+		summarizeBy: none
+		sourceColumn: Grupo Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo Unitário'
+		dataType: double
+		lineageTag: d068b4ff-7fdd-42c4-b33b-4cd40efdc5cd
+		summarizeBy: none
+		sourceColumn: Custo Unitário
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Margem Padrão'
+		dataType: double
+		lineageTag: 50b97399-0a9d-4421-a2bc-3c6e88011edc
+		summarizeBy: none
+		sourceColumn: Margem Padrão
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dm_Produtos = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Pedro\Documents\GitHub\portfolio-power-bi\dashboard-comercial\Bases_Projeto_Comercial_PowerBI.xlsx"), null, true),
+				    Produtos_Sheet = Fonte{[Item="Produtos",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Produtos_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Código Produto", type text}, {"Nome Produto", type text}, {"Categoria", type text}, {"Subcategoria", type text}, {"Linha Produto", type text}, {"Grupo Produto", type text}, {"Custo Unitário", type number}, {"Margem Padrão", Percentage.Type}})
+				in
+				    #"Tipo Alterado"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

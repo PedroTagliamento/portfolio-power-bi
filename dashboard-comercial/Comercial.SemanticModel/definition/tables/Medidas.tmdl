@@ -1,0 +1,85 @@
+table Medidas
+	lineageTag: 56bbabb1-1364-4394-b28d-41acd961c9cc
+
+	measure Faturamento = SUM(ft_Vendas[Faturamento])
+		formatString: #,0.00
+		lineageTag: 8358b23f-27e2-4ac0-bfa0-994e69fd7ef3
+
+	measure 'Margem Bruta' = AVERAGE(ft_Vendas[Margem])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: deb172ac-4d57-4ca1-929f-06fed242ee3c
+
+	measure Pedidos = COUNTROWS(ft_Vendas)
+		formatString: #,0
+		lineageTag: d7c58c0a-db16-4f94-87e9-52f9a8d93a3b
+
+	measure 'Meta Faturamento' = SUM(ft_Metas[Meta Faturamento])
+		formatString: #,0
+		lineageTag: c192ddb0-3a93-445e-8a61-d99cd299dde3
+
+	measure Custo = SUM(ft_Vendas[Custo])
+		lineageTag: 454b5c53-da4c-4775-9265-71fac2205cf7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Meta Fat' = DIVIDE([Faturamento],[Meta Faturamento])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0bbbf6d3-c66e-436a-9a9f-44e093197f2d
+
+	measure '% Custo vs Fat' = DIVIDE([Custo],[Faturamento])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9dafc238-c421-41a8-9865-b1f03bffb0ac
+
+	measure Lucro = [Faturamento]-[Custo]
+		lineageTag: bcd213d2-d624-42b7-9a34-1efd1d4aac43
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento por Vendedor' = DIVIDE([Faturamento],DISTINCTCOUNT(ft_Vendas[Vendedor]))
+		lineageTag: d74f41b3-e85d-4434-ae9b-ae08451c9c53
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Custo por Vendedor' = DIVIDE([Custo],DISTINCTCOUNT(ft_Vendas[Vendedor]))
+		lineageTag: 3e6a5900-48e6-485b-9e44-2bd7d8f5fefa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Margem por Vendedor' = DIVIDE([Margem Bruta],DISTINCTCOUNT(ft_Vendas[Vendedor]))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0494fc8e-fa86-405f-8205-a68673cc452f
+
+	measure 'Produtos por Vendedor' = DIVIDE([Produtos],DISTINCTCOUNT(ft_Vendas[Vendedor]))
+		formatString: #,0
+		lineageTag: 394765f7-51c1-45d1-ba2b-c52c51f002ce
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure Produtos = SUM(ft_Vendas[Quantidade])
+		formatString: #,0
+		lineageTag: 6e5d8874-b8b6-4339-9318-0c5a9c419598
+
+	measure 'Preço Médio' = AVERAGE(ft_Vendas[Preço Unitário])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: ff14ed7f-77da-4a38-80ba-50c1977849e9
+
+		annotation PBI_FormatHint = {"currencyCulture":"kgp-Latn-BR"}
+
+	measure Clientes = DISTINCTCOUNT(ft_Vendas[Cliente])
+		formatString: 0
+		lineageTag: b8583df0-fae1-4074-b779-d75500413e00
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"Coluna 1", type text}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Coluna 1"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

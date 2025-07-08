@@ -1,0 +1,30 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["dm_Clientes","dm_Equipes","ft_Metas","dm_Produtos","ft_Vendas","dm_Calendario","Medidas","dm_Mes"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.144.1378.0 (25.06)+cba1e61f16ea36d44901f06fa446299040122394
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dm_Clientes
+ref table DateTableTemplate_0860c886-2a40-4ee8-b948-87d1c52320b5
+ref table LocalDateTable_008a548a-77d3-416a-8a11-3cb77da20c8b
+ref table dm_Equipes
+ref table ft_Metas
+ref table dm_Produtos
+ref table ft_Vendas
+ref table dm_Calendario
+ref table LocalDateTable_39ecf4c5-f201-49f5-9a35-88755e7b629b
+ref table Medidas
+ref table dm_Mes
+
+ref cultureInfo pt-BR
+

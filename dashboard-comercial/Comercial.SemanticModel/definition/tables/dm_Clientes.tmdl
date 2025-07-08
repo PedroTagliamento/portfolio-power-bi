@@ -1,0 +1,76 @@
+table dm_Clientes
+	lineageTag: 054b7237-c7f0-4d80-a45d-c9b3a8faf960
+
+	column Cliente
+		dataType: string
+		lineageTag: dbb44557-bcec-42f1-bf7a-d37980bc2bfa
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segmento
+		dataType: string
+		lineageTag: afcb8184-f273-4877-b355-2ce89cfda1e4
+		summarizeBy: none
+		sourceColumn: Segmento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Status Cliente'
+		dataType: string
+		lineageTag: fd4847dd-78cd-4784-bef4-f03b077f3695
+		summarizeBy: none
+		sourceColumn: Status Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Data Cadastro'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9fe7f142-c6f0-4275-b1af-ec88cf209c8c
+		summarizeBy: none
+		sourceColumn: Data Cadastro
+
+		variation Variation
+			isDefault
+			relationship: 88411d9b-282b-4502-99f7-b93fa509c77e
+			defaultHierarchy: LocalDateTable_008a548a-77d3-416a-8a11-3cb77da20c8b.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Região
+		dataType: string
+		lineageTag: c0cb429e-29bb-4611-96a5-982de5673d08
+		summarizeBy: none
+		sourceColumn: Região
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cidade
+		dataType: string
+		lineageTag: 175b314e-9b9d-46ca-84ba-74b704add8a9
+		summarizeBy: none
+		sourceColumn: Cidade
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dm_Clientes = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Pedro\Documents\GitHub\portfolio-power-bi\dashboard-comercial\Bases_Projeto_Comercial_PowerBI.xlsx"), null, true),
+				    Clientes_Sheet = Fonte{[Item="Clientes",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Clientes_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Cliente", type text}, {"Segmento", type text}, {"Status Cliente", type text}, {"Data Cadastro", type date}, {"Região", type text}, {"Cidade", type text}})
+				in
+				    #"Tipo Alterado"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

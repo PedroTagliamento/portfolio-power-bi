@@ -1,0 +1,37 @@
+table dm_Mes
+	lineageTag: 8075b15f-75b4-4fc9-ba28-d5b27b598728
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: a8da7c4f-09c8-49b9-95ca-b8dafd0f3b76
+		summarizeBy: none
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome do Mês'
+		dataType: string
+		lineageTag: eb8879f6-b681-4d9e-9aee-9a8e00f45b0f
+		summarizeBy: none
+		sourceColumn: Nome do Mês
+		sortByColumn: Mês
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dm_Mes = m
+		mode: import
+		source =
+				let
+				    Fonte = dm_Calendario,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Mês", "Nome do Mês"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas")
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
